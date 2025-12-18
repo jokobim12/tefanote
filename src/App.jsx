@@ -6,14 +6,24 @@ import TransactionList from './components/TransactionList';
 import StatsCard from './components/StatsCard';
 import Modal from './components/Modal';
 import CalendarModal from './components/CalendarModal';
+import SplashScreen from './components/SplashScreen'; // Import
 import { NotebookPen, AlertCircle, Calendar } from 'lucide-react';
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true); // Loading State
   const [transactions, setTransactions] = useLocalStorage('tefanote_transactions', []);
   
   // State untuk Filter Tanggal (Default: Hari Ini)
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
+  useEffect(() => {
+    // Simulate initial loading
+    const timer = setTimeout(() => {
+        setIsLoading(false);
+    }, 2500); // 2.5s duration
+    return () => clearTimeout(timer);
+  }, []);
 
   // Archived Stats untuk menyimpan nilai transaksi yang dihapus
   const [archivedStats, setArchivedStats] = useState(() => {
@@ -126,6 +136,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col">
+      <SplashScreen isLoading={isLoading} />
       <Toaster position="top-right" />
       
       {/* Header */}
