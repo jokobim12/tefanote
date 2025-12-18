@@ -8,6 +8,7 @@ import Modal from './components/Modal';
 import CalendarModal from './components/CalendarModal';
 import SplashScreen from './components/SplashScreen'; // Import
 import SettingsModal from './components/SettingsModal';
+import AiAssistant from './components/AiAssistant';
 import { PRESET_ITEMS } from './constants/items';
 import { NotebookPen, AlertCircle, Calendar, Settings } from 'lucide-react';
 
@@ -22,8 +23,11 @@ function App() {
 
   // Product Presets State
   const [presetItems, setPresetItems] = useLocalStorage('tefanote_presets', 
-      PRESET_ITEMS.map(i => ({...i, id: crypto.randomUUID()})) // Inject ID for defaults
+      PRESET_ITEMS.map(i => ({...i, id: crypto.randomUUID()})) 
   );
+  
+  // API Key State
+  const [apiKey, setApiKey] = useLocalStorage('tefanote_apikey', '');
 
   const handleResetPresets = () => {
       setPresetItems(PRESET_ITEMS.map(i => ({...i, id: crypto.randomUUID()})));
@@ -280,6 +284,23 @@ function App() {
         items={presetItems}
         onUpdateItems={setPresetItems}
         onResetDefault={handleResetPresets}
+        apiKey={apiKey}
+        onUpdateApiKey={setApiKey}
+      />
+      
+      <AiAssistant 
+        apiKey={apiKey}
+        transactions={transactions}
+        stats={{
+            totalIncome: finalTotalIncome,
+            transactionCount: finalTotalCount
+        }}
+        todayIncome={(() => {
+            const todayStr = new Date().toISOString().split('T')[0];
+            return transactions
+                .filter(t => t.date.startsWith(todayStr))
+                .reduce((sum, t) => sum + (t.totalPrice || t.total || 0), 0) + (new Date(selectedDate).toISOString().split('T')[0] === todayStr ? archivedStats.todayIncome : 0);
+        })()}
       />
     </div>
   );

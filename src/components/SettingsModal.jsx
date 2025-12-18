@@ -1,9 +1,9 @@
 import Modal from './Modal';
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Pencil, Save, X, RotateCcw, Package, Globe, Printer } from 'lucide-react';
+import { Plus, Trash2, Pencil, Save, X, RotateCcw, Package, Globe, Printer, Bot, Key } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-export default function SettingsModal({ isOpen, onClose, items, onUpdateItems, onResetDefault }) {
+export default function SettingsModal({ isOpen, onClose, items, onUpdateItems, onResetDefault, apiKey, onUpdateApiKey }) {
   const [newItem, setNewItem] = useState({ name: '', price: '', type: 'buy' });
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({ name: '', price: '', type: 'buy' });
@@ -174,6 +174,34 @@ export default function SettingsModal({ isOpen, onClose, items, onUpdateItems, o
                     )}
                 </tbody>
             </table>
+        </div>
+
+        {/* API KEY SECTION */}
+        <div className="mt-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <h4 className="text-xs font-bold text-slate-500 uppercase mb-3 flex items-center gap-2">
+                <Bot size={14} /> Start AI Integration
+            </h4>
+            <div className="flex gap-3">
+                <div className="relative flex-1">
+                    <Key size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input 
+                        type="password" 
+                        placeholder="Tempel Gemini API Key di sini..." 
+                        className="w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none"
+                        value={apiKey}
+                        onChange={e => onUpdateApiKey(e.target.value)}
+                    />
+                </div>
+                <button 
+                    onClick={() => window.open('https://aistudio.google.com/app/apikey', '_blank')}
+                    className="px-3 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50"
+                >
+                    Ambil Key Gratis
+                </button>
+            </div>
+            <p className="text-[10px] text-slate-400 mt-2">
+                *API Key disimpan secara lokal di browser Anda. Kami tidak mengirimnya ke server mana pun.
+            </p>
         </div>
 
         {/* FOOTER ACTIONS */}
