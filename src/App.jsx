@@ -7,7 +7,9 @@ import StatsCard from './components/StatsCard';
 import Modal from './components/Modal';
 import CalendarModal from './components/CalendarModal';
 import SplashScreen from './components/SplashScreen'; // Import
-import { NotebookPen, AlertCircle, Calendar } from 'lucide-react';
+import SettingsModal from './components/SettingsModal';
+import { PRESET_ITEMS } from './constants/items';
+import { NotebookPen, AlertCircle, Calendar, Settings } from 'lucide-react';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true); // Loading State
@@ -16,6 +18,17 @@ function App() {
   // State untuk Filter Tanggal (Default: Hari Ini)
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  // Product Presets State
+  const [presetItems, setPresetItems] = useLocalStorage('tefanote_presets', 
+      PRESET_ITEMS.map(i => ({...i, id: crypto.randomUUID()})) // Inject ID for defaults
+  );
+
+  const handleResetPresets = () => {
+      setPresetItems(PRESET_ITEMS.map(i => ({...i, id: crypto.randomUUID()})));
+      toast.success("Produk dikembalikan ke pengaturan awal.");
+  };
 
   useEffect(() => {
     // Simulate initial loading
@@ -154,7 +167,15 @@ function App() {
             </div>
           </div>
           
-          {/* Date Picker Custom Trigger */}
+          <div className="flex items-center gap-3">
+             <button 
+                onClick={() => setIsSettingsOpen(true)}
+                className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
+                title="Pengaturan Produk"
+             >
+                <Settings size={20} />
+             </button>
+             {/* Date Picker Custom Trigger */}
           <div className="text-center sm:text-right w-full sm:w-auto">
              <div className="text-xs text-slate-400 mb-0.5">Filter Tanggal</div>
              <button 
@@ -166,6 +187,7 @@ function App() {
                     {new Date(selectedDate).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                 </span>
              </button>
+          </div>
           </div>
         </div>
       </header>
@@ -185,7 +207,7 @@ function App() {
           {/* Left Column: Form (4 cols) */}
           <div className="lg:col-span-4">
              <div className="sticky top-24">
-                <TransactionForm onAddTransaction={addTransactions} />
+                <TransactionForm onAddTransaction={addTransactions} items={presetItems} />
              </div>
           </div>
 
@@ -250,6 +272,14 @@ function App() {
         onClose={() => setIsCalendarOpen(false)} 
         selectedDate={selectedDate}
         onSelect={setSelectedDate} 
+      />
+
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        items={presetItems}
+        onUpdateItems={setPresetItems}
+        onResetDefault={handleResetPresets}
       />
     </div>
   );

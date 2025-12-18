@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Plus, ShoppingCart, Loader2, User, Tag, Calculator, Printer, Package, Globe, Check, Trash, Save, ChevronRight } from 'lucide-react';
-import { PRESET_ITEMS } from '../constants/items';
 import toast from 'react-hot-toast';
 
-export default function TransactionForm({ onAddTransaction }) {
+export default function TransactionForm({ onAddTransaction, items = [] }) {
   // State Global Sesi
   const [customerName, setCustomerName] = useState('');
   
@@ -144,7 +143,7 @@ export default function TransactionForm({ onAddTransaction }) {
              </div>
           </div>
           <div className="flex gap-2 overflow-x-auto pb-2 snap-x custom-scrollbar">
-            {PRESET_ITEMS.map((item, idx) => (
+            {items.map((item, idx) => (
               <button
                 key={idx}
                 type="button"
