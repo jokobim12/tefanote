@@ -130,7 +130,7 @@ function App() {
       
       {/* Header */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-[85%] xl:max-w-[1400px] mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="w-full md:w-[90%] xl:max-w-[1400px] mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
           <div className="flex items-center gap-3">
             <div className="bg-blue-600 p-2 rounded-lg text-white">
               <NotebookPen size={24} />
@@ -144,7 +144,7 @@ function App() {
           </div>
           
           {/* Date Picker Custom Trigger */}
-          <div className="text-right">
+          <div className="text-center sm:text-right w-full sm:w-auto">
              <div className="text-xs text-slate-400 mb-0.5">Filter Tanggal</div>
              <button 
                 onClick={() => setIsCalendarOpen(true)}
@@ -160,7 +160,7 @@ function App() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-[85%] xl:max-w-[1400px] mx-auto px-4 py-8">
+      <main className="w-full md:w-[90%] xl:max-w-[1400px] mx-auto px-4 py-6 md:py-8">
         
         <StatsCard 
             totalIncome={finalTotalIncome} 
@@ -227,7 +227,7 @@ function App() {
 
       {/* Footer */}
       <footer className="bg-white border-t border-slate-200 py-6 mt-auto">
-        <div className="max-w-[85%] xl:max-w-[1400px] mx-auto px-4 text-center">
+        <div className="w-full md:w-[90%] xl:max-w-[1400px] mx-auto px-4 text-center">
             <p className="text-slate-500 text-sm">
                 &copy; {new Date().getFullYear()} TefaNote. Created by <span className="font-bold text-gray-900">Jokobim</span>
             </p>
