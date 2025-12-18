@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import ReactMarkdown from 'react-markdown';
 import { Bot, Send, X, MessageCircle, Loader2, Sparkles, ChevronDown, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function AiAssistant({ apiKey, transactions, stats, todayIncome }) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useLocalStorage('tefanote_chat_history', [
-    { role: 'model', text: 'Halo! Saya asisten keuangan TefaNote. Ada yang bisa saya bantu analisis hari ini?' }
+    { role: 'model', text: 'Halo kakak! Saya asisten keuangan TefaNote. Ada yang bisa saya bantu analisis hari ini?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -43,11 +44,49 @@ export default function AiAssistant({ apiKey, transactions, stats, todayIncome }
       - 5 Produk Terlaris:
       ${sortedItems}
       
-      INSTRUKSI:
-      Jawablah pertanyaan user berdasarkan data di atas.
-      Jawab dengan singkat, ramah, dan memotivasi.
-      Jika ditanya saran, berikan saran bisnis yang masuk akal berdasarkan data (misal: "Tingkatkan stok produk terlaris").
-      Gunakan format markdown simple jika perlu.
+      PANDUAN FITUR APLIKASI TEFANOTE (KNOWLEDGE BASE):
+      Gunakan informasi ini jika user bertanya cara menggunakan aplikasi:
+
+      1. **Menambah/Mengatur Produk (Preset)**:
+         - Caranya: Klik ikon **Gear/Gerigi** (Pengaturan) di pojok kanan atas layar.
+         - Di sana bisa: Tambah produk baru, hapus produk lama, dan atur API Key AI.
+      
+      2. **Mencatat Transaksi**:
+         - Caranya: Cukup klik tombol produk di bagian "Menu Cepat" (kiri), ATAU ketik manual Nama & Harga lalu klik "Simpan".
+      
+      3. **Cetak Laporan / Struk**:
+         - Caranya: Klik tombol merah **"Download Laporan (PDF)"** di bagian bawah.
+         - PDF berisi ringkasan pemasukan dan tabel detail transaksi.
+      
+      4. **Melihat Riwayat Harian Lain (Filter Tanggal)**:
+         - Caranya: Klik tombol **Tanggal** (ikon Kalender) di pojok kanan atas (Desktop) atau baris bawah (Mobile).
+         - Pilih tanggal yang diinginkan untuk melihat history masa lalu.
+      
+      5. **Edit / Hapus Transaksi**:
+         - Edit: Klik ikon **Pensil Kuning** di tabel transaksi.
+         - Hapus: Klik ikon **Tong Sampah Merah** di tabel transaksi.
+      
+      6. **Reset/Hapus Semua Data**:
+         - Caranya: Klik tombol "Reset" (ikon putar balik) di kartu statistik Pemasukan Hari Ini jika ingin mulai dari nol.
+
+      PERAN DAN INSTRUKSI:
+      Anda adalah "TefaNote Advisor", konsultan bisnis digital sekaligus **Pemandu Aplikasi** yang cerdas.
+      
+      Tugas Anda:
+      1. Jika user bertanya data/analisis: Lakukan analisis mendalam seperti instruksi sebelumnya.
+      2. **(BARU) Jika user bertanya CARA/FITUR**: Jawablah dengan memandu mereka menekan tombol yang tepat sesuai Knowledge Base di atas. Jawab dengan jelas dan membantu.
+      
+      3. Format Jawaban:
+         - Gunakan Markdown (**Bold** untuk nama tombol/menu penting).
+         - Gunakan List jika langkah-langkahnya perlu urutan.
+      
+      4. Gaya Bahasa: Bahasa Indonesia profesional, ramah, dan solutif.
+      
+      CONTOH JAWABAN (JIKA DITANYA CARA):
+      "Untuk menambah produk baru gampang banget, Kak! ikuti langkah ini:
+      1. Klik ikon **Gear ⚙️** (Pengaturan) di pojok kanan atas.
+      2. Masukkan nama dan harga produk.
+      3. Klik tombol **Tambah**."
     `;
   };
 
@@ -216,9 +255,17 @@ export default function AiAssistant({ apiKey, transactions, stats, todayIncome }
                         ? 'bg-blue-600 text-white rounded-br-none' 
                         : 'bg-white text-slate-700 border border-slate-100 rounded-bl-none'
                     }`}>
-                        {msg.text.split('\n').map((line, i) => (
-                            <p key={i} className="mb-1 last:mb-0">{line}</p>
-                        ))}
+                        <ReactMarkdown 
+                            components={{
+                                ul: ({node, ...props}) => <ul className="list-disc pl-4 mb-2 space-y-1" {...props} />,
+                                ol: ({node, ...props}) => <ol className="list-decimal pl-4 mb-2 space-y-1" {...props} />,
+                                li: ({node, ...props}) => <li className="mb-0.5" {...props} />,
+                                p: ({node, ...props}) => <p className="mb-2 last:mb-0 leading-relaxed" {...props} />,
+                                strong: ({node, ...props}) => <strong className="font-bold underline decoration-blue-300 decoration-2 underline-offset-2" {...props} />,
+                            }}
+                        >
+                            {msg.text}
+                        </ReactMarkdown>
                     </div>
                 </div>
             ))}
@@ -238,7 +285,7 @@ export default function AiAssistant({ apiKey, transactions, stats, todayIncome }
          <form onSubmit={handleSend} className="p-3 bg-white border-t border-slate-100 shrink-0 flex gap-2">
             <input 
                 type="text" 
-                placeholder="Tanya analisis keuangan..." 
+                placeholder="Tanyakan Sesuatu" 
                 className="flex-1 bg-slate-100 border-transparent focus:bg-white focus:border-blue-500 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-inner"
                 value={input}
                 onChange={e => setInput(e.target.value)}
