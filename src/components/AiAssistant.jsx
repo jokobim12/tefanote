@@ -90,9 +90,10 @@ export default function AiAssistant({ apiKey, transactions, stats, todayIncome }
         // FALLBACK: If discovery failed or returned no models, use hardcoded defaults
         if (availableModels.length === 0) {
             availableModels = [
-                { name: 'gemini-1.5-flash' },
-                { name: 'gemini-1.5-flash-001' },
-                { name: 'gemini-pro' }
+                { name: 'models/gemini-1.5-flash' },
+                { name: 'models/gemini-1.5-flash-001' },
+                { name: 'models/gemini-1.5-pro' },
+                { name: 'models/gemini-pro' }
             ];
         }
 
