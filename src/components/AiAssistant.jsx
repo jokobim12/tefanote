@@ -71,20 +71,29 @@ export default function AiAssistant({ apiKey, transactions, stats, todayIncome }
     try {
         const prompt = `System: ${generateContext()}\nUser: ${input}`;
         
-        // 1. Discover available models first
-        const modelsReq = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey.trim()}`);
-        const modelsData = await modelsReq.json();
-        
-        if (!modelsReq.ok) {
-             throw new Error("Gagal mengambil daftar model AI. Cek API Key.");
+        // 1. Discover available models strategies
+        let availableModels = [];
+        try {
+            const modelsReq = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey.trim()}`);
+            if (modelsReq.ok) {
+                const modelsData = await modelsReq.json();
+                availableModels = modelsData.models?.filter(m => 
+                    m.supportedGenerationMethods?.includes("generateContent")
+                ) || [];
+            } else {
+                console.warn("ListModels failed, using fallback.");
+            }
+        } catch (e) {
+            console.warn("Auto-discovery error:", e);
         }
 
-        const availableModels = modelsData.models?.filter(m => 
-            m.supportedGenerationMethods?.includes("generateContent")
-        ) || [];
-
+        // FALLBACK: If discovery failed or returned no models, use hardcoded defaults
         if (availableModels.length === 0) {
-            throw new Error("Tidak ada model AI yang tersedia untuk API Key ini.");
+            availableModels = [
+                { name: 'gemini-1.5-flash' },
+                { name: 'gemini-1.5-flash-001' },
+                { name: 'gemini-pro' }
+            ];
         }
 
         // Prioritize known stable models

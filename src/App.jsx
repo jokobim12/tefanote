@@ -158,40 +158,45 @@ function App() {
       
       {/* Header */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm">
-        <div className="w-full md:w-[90%] xl:max-w-[1400px] mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
-          <div className="flex items-center gap-3">
-            <div className="bg-blue-600 p-2 rounded-lg text-white">
-              <NotebookPen size={24} />
+        <div className="w-full md:w-[90%] xl:max-w-[1400px] mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-y-3">
+          {/* 1. Logo Section */}
+          <div className="flex items-center gap-3 order-1">
+            <div className="bg-blue-600 p-2 rounded-lg text-white shadow-blue-200">
+              <NotebookPen size={22} />
             </div>
             <div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-700 to-blue-500 bg-clip-text text-transparent">
+              <h1 className="text-lg font-bold bg-gradient-to-r from-blue-700 to-blue-500 bg-clip-text text-transparent leading-tight">
                 TefaNote
               </h1>
-              <p className="text-xs text-slate-500">Pencatat Keuangan Sederhana</p>
+              <p className="text-[10px] text-slate-500 font-medium tracking-wide">Financial Record</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
-             <button 
+          {/* 2. Settings Button (Mobile: Top Right, Desktop: Far Right) */}
+          <button 
                 onClick={() => setIsSettingsOpen(true)}
-                className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
+                className="order-2 sm:order-3 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-blue-600 transition-colors border border-transparent hover:border-slate-200"
                 title="Pengaturan Produk"
-             >
+          >
                 <Settings size={20} />
-             </button>
-             {/* Date Picker Custom Trigger */}
-          <div className="text-center sm:text-right w-full sm:w-auto">
-             <div className="text-xs text-slate-400 mb-0.5">Filter Tanggal</div>
+          </button>
+
+          {/* 3. Date Picker (Mobile: Full Width Bottom, Desktop: Middle Right) */}
+          <div className="order-3 sm:order-2 w-full sm:w-auto">
              <button 
                 onClick={() => setIsCalendarOpen(true)}
-                className="group relative inline-flex items-center gap-2 bg-slate-50 hover:bg-slate-100 px-3 py-1.5 rounded-lg border border-transparent hover:border-slate-200 transition-all cursor-pointer"
+                className="w-full sm:w-auto group relative flex items-center justify-between sm:justify-start gap-3 bg-white hover:bg-slate-50 px-4 py-2.5 rounded-xl border border-slate-200 hover:border-blue-300 transition-all cursor-pointer shadow-sm active:scale-[0.98]"
              >
-                <Calendar size={16} className="text-blue-600 group-hover:scale-110 transition-transform" />
-                <span className="text-sm font-bold text-slate-700">
-                    {new Date(selectedDate).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-                </span>
+                <div className="flex items-center gap-2">
+                    <Calendar size={18} className="text-blue-600 group-hover:scale-110 transition-transform" />
+                    <span className="text-sm font-bold text-slate-700">
+                        {new Date(selectedDate).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
+                    </span>
+                </div>
+                <div className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors block sm:hidden">
+                    Ganti
+                </div>
              </button>
-          </div>
           </div>
         </div>
       </header>
